@@ -1,0 +1,46 @@
+﻿<!-- UpdatePrompt.razor -->
+@page "/Update/{PromptId:int}"
+@using Blazor_Server.Data;
+@inject Interface audioData
+@inject NavigationManager NavigationManager
+
+<h3>Update Audio Prompt</h3>
+
+@if (prompt != null)
+{
+    <div>
+        <label for="prompt">Prompt:</label>
+        <input type="text" id="prompt" @bind="prompt.Prompt" />
+    </div>
+    <div>
+        <button @onclick="UpdatePrompt">Update</button>
+    </div>
+}
+else
+{
+    <p>Loading prompt...</p>
+}
+
+@code {
+    [Parameter]
+    public int PromptId { get; set; }
+
+    private AudioTable prompt;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch the prompt to be updated from the database
+        prompt = await audioData.GetPromptById(PromptId);
+    }
+
+    private async Task UpdatePrompt()
+    {
+        if (prompt != null)
+        {
+            // Update the prompt in the database
+            await audioData.UpdateAudioPrompt(prompt);
+            // Optionally, you can redirect the user to another page after update
+            NavigationManager.NavigateTo("/prompts");
+        }
+    }
+}

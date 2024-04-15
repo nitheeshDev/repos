@@ -1,0 +1,34 @@
+﻿@page "/Create"
+@using Blazor_Server.Data;
+@inject Interface audioData
+
+<h3>Create Audio Prompt</h3>
+
+<div>
+    <label for="prompt">Prompt:</label>
+    <input type="text" id="prompt" @bind="newPrompt.Prompt" />
+</div>
+<div>
+    <button @onclick="CreatePrompt">Create</button>
+</div>
+
+@code {
+    private AudioTable newPrompt = new AudioTable();
+
+    private async Task CreatePrompt()
+    {
+        // You might want to validate the input before inserting into the database
+
+        // Set the CreatedDate to the current date
+        newPrompt.CreatedDate = DateTime.Now;
+
+        // Assuming IsActivePrompt is always true for new prompts
+        newPrompt.IsActivePrompt = 1;
+
+        // Insert the new prompt into the database
+        await audioData.InsertAudioPrompt(newPrompt);
+
+        // Optionally, you can redirect the user to another page after insertion
+        // NavigationManager.NavigateTo("/prompts");
+    }
+}
